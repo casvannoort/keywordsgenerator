@@ -9,35 +9,35 @@ $themes = ['Generiek'];
 $types = [];
 $modifiers = [];
 $matchTypes = [
-    function ($theme, $type, $modifier) {
+    function ($theme, $modifier, $type) {
         if ($theme === 'Generiek') {
             return "+${type} +${modifier}";
         }
-        return "+${theme} +${type} +${modifier}";
+        return "+${theme} +${modifier} +${type}";
     },
-    function ($theme, $type, $modifier) {
-        if ($theme === 'Generiek') {
-            return "\"${type} ${modifier}\"";
-        }
-        return "\"${theme} ${type} ${modifier}\"";
-    },
-    function ($theme, $type, $modifier) {
+    function ($theme, $modifier, $type) {
         if ($theme === 'Generiek') {
             return "\"${modifier} ${type}\"";
         }
-        return "\"${type} ${modifier} ${theme}\"";
+        return "\"${theme} ${modifier} ${type}\"";
     },
-    function ($theme, $type, $modifier) {
+    function ($theme, $modifier, $type) {
         if ($theme === 'Generiek') {
-            return "[${type} ${modifier}]";
+            return "\"${type} ${modifier}\"";
         }
-        return "[${theme} ${type} ${modifier}]";
+        return "\"${modifier} ${type} ${theme}\"";
     },
-    function ($theme, $type, $modifier) {
+    function ($theme, $modifier, $type) {
+        if ($theme === 'Generiek') {
+            return "[${modifier} ${type}]";
+        }
+        return "[${theme} ${modifier} ${type}]";
+    },
+    function ($theme, $modifier, $type) {
         if ($theme === 'Generiek') {
             return '';
         }
-        return "[${type} ${modifier} ${theme}]";
+        return "[${modifier} ${type} ${theme}]";
     },
 ];
 $stdout = fopen('php://stdout', 'w');
@@ -52,10 +52,10 @@ if ($handle) {
                 $themes[] = $values[0];
             }
             if ($values[1] !== '') {
-                $types[] = $values[1];
+                $modifiers[] = $values[1];
             }
             if ($values[2] !== '') {
-                $modifiers[] = $values[2];
+                $types[] = $values[2];
             }
         }
         ++$count;
@@ -70,7 +70,7 @@ foreach ($themes as $theme) {
     foreach ($types as $type) {
         foreach ($modifiers as $modifier) {
             foreach ($matchTypes as $matchType) {
-                $result = $matchType($theme, $type, $modifier);
+                $result = $matchType($theme, $modifier, $type);
                 if ($result !== '') {
                     fputcsv($stdout, [
                         $theme,
