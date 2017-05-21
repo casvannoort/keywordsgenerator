@@ -11,9 +11,15 @@ $modifiers = [];
 $matchTypes = [
     function ($theme, $modifier, $type) {
         if ($theme === 'Generiek') {
-            return "+${type} +${modifier}";
+            return "+${modifier} +${type}";
         }
         return "+${theme} +${modifier} +${type}";
+    },
+    function ($theme, $modifier, $type) {
+        if ($theme === 'Generiek') {
+            return "+${modifier}" . strtolower($type);
+        }
+        return "+${theme} +${modifier}" . strtolower($type);
     },
     function ($theme, $modifier, $type) {
         if ($theme === 'Generiek') {
@@ -23,9 +29,21 @@ $matchTypes = [
     },
     function ($theme, $modifier, $type) {
         if ($theme === 'Generiek') {
-            return "\"${type} ${modifier}\"";
+            return "\"${modifier}" . strtolower($type) . "\"";
+        }
+        return "\"${theme} ${modifier}" . strtolower($type) . "\"";
+    },
+    function ($theme, $modifier, $type) {
+        if ($theme === 'Generiek') {
+            return "";
         }
         return "\"${modifier} ${type} ${theme}\"";
+    },
+    function ($theme, $modifier, $type) {
+        if ($theme === 'Generiek') {
+            return "";
+        }
+        return "\"${modifier}" . strtolower($type) .  " ${theme}\"";
     },
     function ($theme, $modifier, $type) {
         if ($theme === 'Generiek') {
@@ -35,9 +53,21 @@ $matchTypes = [
     },
     function ($theme, $modifier, $type) {
         if ($theme === 'Generiek') {
+            return "[${modifier}" . strtolower($type) . "]";
+        }
+        return "[${theme} ${modifier}" . strtolower($type) . "]";
+    },
+    function ($theme, $modifier, $type) {
+        if ($theme === 'Generiek') {
             return '';
         }
         return "[${modifier} ${type} ${theme}]";
+    },
+    function ($theme, $modifier, $type) {
+        if ($theme === 'Generiek') {
+            return '';
+        }
+        return "[${modifier}" . strtolower($type) . " ${theme}]";
     },
 ];
 $stdout = fopen('php://stdout', 'w');
@@ -52,10 +82,10 @@ if ($handle) {
                 $themes[] = $values[0];
             }
             if ($values[1] !== '') {
-                $modifiers[] = $values[1];
+                $types[] = $values[1];
             }
             if ($values[2] !== '') {
-                $types[] = $values[2];
+                $modifiers[] = $values[2];
             }
         }
         ++$count;
